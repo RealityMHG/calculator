@@ -1,0 +1,28 @@
+body {
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2082fa
+}
+
+.calculator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 2px;
+    border: 5px solid #062245;
+    padding: 15px;
+}
+
+.screen {
+    border: 1px solid black;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
