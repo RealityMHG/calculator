@@ -80,6 +80,12 @@ function getOperationResult (numberArray, operation) {
         case "-":
             operationResult = numberArray.reduce((total,num) => (total-=num));
             break;
+        case "x":
+            operationResult = numberArray.reduce((total,num) => (total*=num));
+            break;
+        case "/":
+            operationResult = numberArray.reduce((total,num) => (total/=num));
+            break;
     }
     return operationResult;
 }
