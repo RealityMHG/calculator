@@ -11,13 +11,20 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 2px;
+    border-radius: 5px;
     border: 5px solid #062245;
+    background-color: blue;
     padding: 15px;
 }
 
 .screen {
+    display: flex;
     border: 1px solid black;
+    align-self: stretch;
+    justify-content: flex-end;
+}
+.screen-text {
+    margin: 0;
 }
 
 .buttons {
@@ -26,3 +33,27 @@ body {
     align-items: center;
 }
 
+.main-ops {
+    display: flex;
+    gap: 5px;
+}
+
+.ops-row {
+    display: flex;
+    flex-direction: column;
+}
+
+.ops {
+    display: flex;
+    align-items: center;
+}
+
+.op-btn {
+    background-color: lightblue;
+}
+
+button{
+    border-radius: 1px;
+    width: 50px;
+    height: 50px;
+}
