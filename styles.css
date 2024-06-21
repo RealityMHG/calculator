@@ -4,17 +4,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #2082fa
+    background-color: #c8d916;
 }
 
 .calculator {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 5px;
+    border-radius: 20px;
     border: 5px solid #062245;
-    background-color: blue;
-    padding: 15px;
+    background-color: #1646d9;
+    padding: 25px;
 }
 
 .screen {
@@ -22,6 +22,7 @@ body {
     border: 1px solid black;
     align-self: stretch;
     justify-content: flex-end;
+    border-radius: 5px;
 }
 .screen-text {
     margin: 0;
@@ -45,15 +46,19 @@ body {
 
 .ops {
     display: flex;
-    align-items: center;
 }
 
 .op-btn {
     background-color: lightblue;
 }
 
+#result-btn {
+    height: 100%;
+}
+
 button{
     border-radius: 1px;
     width: 50px;
     height: 50px;
+    border-radius: 5px;
 }

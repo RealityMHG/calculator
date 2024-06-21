@@ -21,6 +21,9 @@ allNumberBtns.forEach((number) => {
                     updateScreen();
                 }               
                 break;
+            case ",":
+                
+                break;
             default:
                 if(!hasEnteredAnything) {
                     screenArray = [];
@@ -65,10 +68,6 @@ allOpBtns.forEach((op) => {
     
     });
 });
-
-
-
-
 
 //Functions
 function getOperationResult (numberArray, operation) {
