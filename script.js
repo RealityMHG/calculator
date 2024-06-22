@@ -23,7 +23,7 @@ allNumberBtns.forEach((number) => {
                 }               
                 break;
             case ".":
-                if(!hasEnteredAComma) {
+                if(!hasEnteredAComma && screenArray.length<16) {
                     screenArray.push(".");
                     updateScreen();
                     hasEnteredAComma = true;
@@ -31,12 +31,14 @@ allNumberBtns.forEach((number) => {
                 } 
                 break;
             default:
-                if(!hasEnteredAnything) {
-                    screenArray = [];
-                    hasEnteredAnything = true;
+                if(screenArray.length<16) {
+                    if(!hasEnteredAnything) {
+                        screenArray = [];
+                        hasEnteredAnything = true;
+                    }
+                    screenArray.push(number.textContent);
+                    updateScreen(); 
                 }
-                screenArray.push(number.textContent);
-                updateScreen();
                 break;
         }
     });
@@ -103,23 +105,35 @@ function getOperationResult (numberArray, operation) {
         case "/":
             operationResult = numberArray.reduce((total,num) => (total/=num));
             break;
+        case "!":
+            break;
+        case "^":
+            operationResult = numberArray[0] ** numberArray[1];
+            break;
+        case "&#8730;":
+           // operationResult = Math.sqrt(nu)
+            break;
     }
+    if(operationResult.countDecimals() > 5) {
+        return operationResult.toFixed(5);
+    } 
     return operationResult;
 }
 
 function operationHandler(op) {
     numbersForOp.push(Number(getNumberOnScreen()));
     if(currentOp == "empty") {
-        currentOp = op.textContent;
-        resetScreen();
+        if(op.textContent == "&#8730;") {
+            let result = getOperationResult(numbersForOp,currentOp);
+            showOperationResult(op,result);
+        } else {
+            currentOp = op.textContent;
+            resetScreen();     
+        }
     } else {
         let result = getOperationResult(numbersForOp,currentOp);
-        screenArray = [result];
-        updateScreen();
-        numbersForOp = [result];
-        hasEnteredAnything = false;
-        hasEnteredAComma = false;
-        currentOp = op.textContent;
+        showOperationResult(op,result);
+        
     }
 }
 
@@ -128,7 +142,16 @@ function getNumberOnScreen() {
 }
 
 function updateScreen() {
-    screenDisplay.textContent = getNumberOnScreen();
+    screenDisplay.textContent = Number(getNumberOnScreen());
+}
+
+function showOperationResult(op,result) {
+    screenArray = [Number(result)];
+    updateScreen();
+    numbersForOp = [Number(result)];
+    hasEnteredAnything = false;
+    hasEnteredAComma = false;
+    currentOp = op.textContent;
 }
 
 function resetAll() {
@@ -142,4 +165,17 @@ function resetScreen() {
     hasEnteredAnything = false;
     hasEnteredAComma = false;
     updateScreen();
+}
+
+//Count how many decimals a number has (IMPORTED)
+Number.prototype.countDecimals = function () {
+    if (Math.floor(this.valueOf()) === this.valueOf()) return 0;
+
+    var str = this.toString();
+    if (str.indexOf(".") !== -1 && str.indexOf("-") !== -1) {
+        return str.split("-")[1] || 0;
+    } else if (str.indexOf(".") !== -1) {
+        return str.split(".")[1].length || 0;
+    }
+    return str.split("-")[1] || 0;
 }
