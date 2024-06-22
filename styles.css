@@ -28,10 +28,37 @@ body {
     margin: 0;
 }
 
+.special-ops {
+    display: flex;
+    justify-content: center;
+}
+
+.special-ops-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.special-ops-btn,
+.clear-btn {
+    width: 40px;
+    height: 40px;
+}
+
+.special-ops-btn.clear-btn {
+    background-color: #f57373;
+}
+
+.special-ops-btn {
+    background-color: #6cbbf0;
+}
+
 .buttons {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 5px;
+    gap: 3px;
 }
 
 .main-ops {

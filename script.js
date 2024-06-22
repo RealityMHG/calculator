@@ -6,6 +6,7 @@ let screenArray = screenDisplay.textContent.split();
 let numbersForOp = [];
 let currentOp = "empty";
 let hasEnteredAnything = false;
+let hasEnteredAComma = false;
 
 //Adding event listeners to the buttons
 //Numbers
@@ -21,8 +22,13 @@ allNumberBtns.forEach((number) => {
                     updateScreen();
                 }               
                 break;
-            case ",":
-                
+            case ".":
+                if(!hasEnteredAComma) {
+                    screenArray.push(".");
+                    updateScreen();
+                    hasEnteredAComma = true;
+                    hasEnteredAnything = true;
+                } 
                 break;
             default:
                 if(!hasEnteredAnything) {
@@ -36,33 +42,45 @@ allNumberBtns.forEach((number) => {
     });
 });
 
+//Special Operations
+let allSpecialOpBtns = document.querySelectorAll(".special-ops-btn");
+allSpecialOpBtns.forEach((op) => {
+    op.addEventListener("click", () => {
+        switch(op.textContent) {
+            case "AC":
+                resetAll();
+                break;
+
+            case "C":
+                resetScreen();
+                break;
+            
+            default:
+                operationHandler(op);
+                break;
+        }
+    });
+});
+
 //Operations
 let allOpBtns = document.querySelectorAll(".op-btn");
 allOpBtns.forEach((op) => {
     op.addEventListener("click", () => {
         switch(op.textContent) {              
             case "=":
-                numbersForOp.push(Number(getNumberOnScreen()));
-                let result = getOperationResult(numbersForOp,currentOp);
-                screenArray = [result];
-                updateScreen();
-                numbersForOp = [];
-                currentOp = "empty";
-                hasEnteredAnything = false;
-                break;
-
-            default:
-                numbersForOp.push(Number(getNumberOnScreen()));
-                if(currentOp == "empty") {
-                    currentOp = op.textContent;
-                    resetScreen();
-                } else {
+                if(currentOp!="empty") {
+                    numbersForOp.push(Number(getNumberOnScreen()));
                     let result = getOperationResult(numbersForOp,currentOp);
                     screenArray = [result];
                     updateScreen();
-                    numbersForOp = [result];
+                    numbersForOp = [];
+                    currentOp = "empty";
                     hasEnteredAnything = false;
-                }
+                }        
+                break;
+
+            default:
+                operationHandler(op);
                 break;
         }
     
@@ -89,6 +107,22 @@ function getOperationResult (numberArray, operation) {
     return operationResult;
 }
 
+function operationHandler(op) {
+    numbersForOp.push(Number(getNumberOnScreen()));
+    if(currentOp == "empty") {
+        currentOp = op.textContent;
+        resetScreen();
+    } else {
+        let result = getOperationResult(numbersForOp,currentOp);
+        screenArray = [result];
+        updateScreen();
+        numbersForOp = [result];
+        hasEnteredAnything = false;
+        hasEnteredAComma = false;
+        currentOp = op.textContent;
+    }
+}
+
 function getNumberOnScreen() {
     return screenArray.join("");
 }
@@ -97,8 +131,15 @@ function updateScreen() {
     screenDisplay.textContent = getNumberOnScreen();
 }
 
+function resetAll() {
+    resetScreen();
+    numbersForOp = [];
+    currentOp = "empty";
+}
+
 function resetScreen() {
     screenArray = [0];
     hasEnteredAnything = false;
+    hasEnteredAComma = false;
     updateScreen();
 }
