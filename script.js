@@ -2,6 +2,8 @@
 let screenDisplay = document.querySelector(".screen-text");
 let screenArray = screenDisplay.textContent.split();
 
+const MAX_NUMBERS = 16;
+
 //Variables for the operations
 let numbersForOp = [];
 let currentOp = "empty";
@@ -31,7 +33,7 @@ allNumberBtns.forEach((number) => {
                 } 
                 break;
             default:
-                if(screenArray.length<16) {
+                if(screenArray.length<MAX_NUMBERS) {
                     if(!hasEnteredAnything) {
                         screenArray = [];
                         hasEnteredAnything = true;
@@ -106,12 +108,13 @@ function getOperationResult (numberArray, operation) {
             operationResult = numberArray.reduce((total,num) => (total/=num));
             break;
         case "!":
+            operationResult = factorialize(numberArray[0]);
             break;
         case "^":
             operationResult = numberArray[0] ** numberArray[1];
             break;
-        case "&#8730;":
-           // operationResult = Math.sqrt(nu)
+        case "√":
+            operationResult = Math.sqrt(numberArray[0]);
             break;
     }
     if(operationResult.countDecimals() > 5) {
@@ -123,8 +126,8 @@ function getOperationResult (numberArray, operation) {
 function operationHandler(op) {
     numbersForOp.push(Number(getNumberOnScreen()));
     if(currentOp == "empty") {
-        if(op.textContent == "&#8730;") {
-            let result = getOperationResult(numbersForOp,currentOp);
+        if(op.textContent == "√" || op.textContent == "!") {
+            let result = getOperationResult(numbersForOp,op.textContent);
             showOperationResult(op,result);
         } else {
             currentOp = op.textContent;
@@ -142,16 +145,25 @@ function getNumberOnScreen() {
 }
 
 function updateScreen() {
-    screenDisplay.textContent = Number(getNumberOnScreen());
+    if(screenArray[screenArray.length-1] == "0") {
+        screenDisplay.textContent = getNumberOnScreen();
+    }
+    else {
+        screenDisplay.textContent = Number(getNumberOnScreen());
+    }
 }
 
 function showOperationResult(op,result) {
     screenArray = [Number(result)];
     updateScreen();
-    numbersForOp = [Number(result)];
     hasEnteredAnything = false;
     hasEnteredAComma = false;
-    currentOp = op.textContent;
+    if(op.textContent!="√" && op.textContent!="!") {
+        numbersForOp = [Number(result)];
+        currentOp = op.textContent;        
+    } else {
+        numbersForOp = [];
+    }
 }
 
 function resetAll() {
@@ -178,4 +190,14 @@ Number.prototype.countDecimals = function () {
         return str.split(".")[1].length || 0;
     }
     return str.split("-")[1] || 0;
+}
+
+function factorialize(num) {
+    if (num < 0) 
+          return -1;
+    else if (num == 0) 
+        return 1;
+    else {
+        return (num * factorialize(num - 1));
+    }
 }
