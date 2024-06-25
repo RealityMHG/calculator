@@ -18,7 +18,7 @@ allNumberBtns.forEach((number) => {
         switch(number.textContent) {
             case "del":
                 if(screenArray.length == 1) {
-                    resetScreen();
+                    resetScreen(0);
                 } else {
                     screenArray.pop();
                     updateScreen();
@@ -56,11 +56,11 @@ allSpecialOpBtns.forEach((op) => {
                 break;
 
             case "C":
-                resetScreen();
+                resetScreen(0);
                 break;
             
             default:
-                operationHandler(op);
+                operationHandler(Number(screenDisplay));
                 break;
         }
     });
@@ -131,7 +131,7 @@ function operationHandler(op) {
             showOperationResult(op,result);
         } else {
             currentOp = op.textContent;
-            resetScreen();     
+            resetScreen(Number(getNumberOnScreen()));     
         }
     } else {
         let result = getOperationResult(numbersForOp,currentOp);
@@ -167,13 +167,13 @@ function showOperationResult(op,result) {
 }
 
 function resetAll() {
-    resetScreen();
+    resetScreen(0);
     numbersForOp = [];
     currentOp = "empty";
 }
 
-function resetScreen() {
-    screenArray = [0];
+function resetScreen(numBefore) {
+    screenArray = [numBefore];
     hasEnteredAnything = false;
     hasEnteredAComma = false;
     updateScreen();
