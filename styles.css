@@ -17,6 +17,12 @@ body {
     padding: 25px;
 }
 
+.op-text {
+    display: flex;
+    align-self: stretch;
+    justify-content: flex-end;
+}
+
 .screen {
     display: flex;
     border: 1px solid black;
@@ -83,9 +89,13 @@ body {
     height: 100%;
 }
 
-button{
+button {
     border-radius: 1px;
     width: 50px;
     height: 50px;
     border-radius: 5px;
+}
+
+small {
+    opacity: 70%;
 }

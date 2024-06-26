@@ -2,6 +2,8 @@
 let screenDisplay = document.querySelector(".screen-text");
 let screenArray = screenDisplay.textContent.split();
 
+let tinyOpText = document.querySelector(".op-text-display");
+
 const MAX_NUMBERS = 16;
 
 //Variables for the operations
@@ -9,6 +11,7 @@ let numbersForOp = [];
 let currentOp = "empty";
 let hasEnteredAnything = false;
 let hasEnteredAComma = false;
+let lastButtonOp = false;
 
 //Adding event listeners to the buttons
 //Numbers
@@ -17,26 +20,37 @@ allNumberBtns.forEach((number) => {
     number.addEventListener("click", () => {
         switch(number.textContent) {
             case "del":
-                if(screenArray.length == 1) {
-                    resetScreen(0);
-                } else {
-                    screenArray.pop();
-                    updateScreen();
-                }               
+                if(!lastButtonOp) {
+                    if(screenArray.length == 1) {
+                        resetScreen(0);
+                    } else {
+                        screenArray.pop();
+                        updateScreen();
+                    }                            
+                }
                 break;
             case ".":
+                if(lastButtonOp) {
+                    screenArray = [0]
+                    hasEnteredAnything = true;
+                    lastButtonOp = false;
+                }
                 if(!hasEnteredAComma && screenArray.length<16) {
                     screenArray.push(".");
                     updateScreen();
                     hasEnteredAComma = true;
-                    hasEnteredAnything = true;
+                    hasEnteredAnything = true;                   
                 } 
                 break;
             default:
                 if(screenArray.length<MAX_NUMBERS) {
+                    lastButtonOp = false;
                     if(!hasEnteredAnything) {
                         screenArray = [];
                         hasEnteredAnything = true;
+                    }
+                    if(currentOp == "empty") {
+                        tinyOpText.textContent = "----";
                     }
                     screenArray.push(number.textContent);
                     updateScreen(); 
@@ -58,9 +72,13 @@ allSpecialOpBtns.forEach((op) => {
             case "C":
                 resetScreen(0);
                 break;
+
+            case "^":
+                operationHandler(op);
+            break;
             
             default:
-                operationHandler(Number(screenDisplay));
+                specialOperationHandler(op);
                 break;
         }
     });
@@ -74,13 +92,15 @@ allOpBtns.forEach((op) => {
             case "=":
                 if(currentOp!="empty") {
                     numbersForOp.push(Number(getNumberOnScreen()));
+                    tinyOpText.textContent += " " + numbersForOp[1];
                     let result = getOperationResult(numbersForOp,currentOp);
                     screenArray = [result];
                     updateScreen();
                     numbersForOp = [];
                     currentOp = "empty";
                     hasEnteredAnything = false;
-                }        
+                }
+                lastButtonOp = false;        
                 break;
 
             default:
@@ -124,20 +144,30 @@ function getOperationResult (numberArray, operation) {
 }
 
 function operationHandler(op) {
-    numbersForOp.push(Number(getNumberOnScreen()));
-    if(currentOp == "empty") {
-        if(op.textContent == "√" || op.textContent == "!") {
-            let result = getOperationResult(numbersForOp,op.textContent);
-            showOperationResult(op,result);
-        } else {
+    if(!lastButtonOp) {
+        numbersForOp.push(Number(getNumberOnScreen()));
+        if(currentOp == "empty") {   
             currentOp = op.textContent;
+            tinyOpText.textContent = Number(getNumberOnScreen()) + " " + currentOp;
             resetScreen(Number(getNumberOnScreen()));     
+        } else {
+            let result = getOperationResult(numbersForOp,currentOp);
+            showOperationResult(op,result);
+            tinyOpText.textContent = result + " " + op.textContent;
         }
     } else {
-        let result = getOperationResult(numbersForOp,currentOp);
-        showOperationResult(op,result);
-        
+        currentOp = op.textContent;
+        tinyOpText.textContent = Number(getNumberOnScreen()) + " " + currentOp;
     }
+    lastButtonOp = true;
+}
+
+function specialOperationHandler(op) {
+    numbersForOp.push(Number(getNumberOnScreen()));
+    let result = getOperationResult(numbersForOp,op.textContent);
+    showOperationResult(op,result);
+    currentOp = "empty";
+    
 }
 
 function getNumberOnScreen() {
@@ -170,12 +200,16 @@ function resetAll() {
     resetScreen(0);
     numbersForOp = [];
     currentOp = "empty";
+    tinyOpText.textContent ="----";
 }
 
 function resetScreen(numBefore) {
     screenArray = [numBefore];
     hasEnteredAnything = false;
     hasEnteredAComma = false;
+    if(numBefore != 0) {
+        tinyOpText.textContent = numBefore + " " + currentOp;
+    }
     updateScreen();
 }
 
