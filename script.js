@@ -20,22 +20,27 @@ allNumberBtns.forEach((number) => {
     number.addEventListener("click", () => {
         switch(number.textContent) {
             case "del":
+                //If the last button pressed was a number then safe to proceed
                 if(!lastButtonOp) {
+                    //If the number is only one digit then resets the screen
                     if(screenArray.length == 1) {
                         resetScreen(0);
                     } else {
+                        //If not then deletes the last digit
                         screenArray.pop();
                         updateScreen();
                     }                            
                 }
                 break;
             case ".":
+                //If the last button was an operation then resets the screen
                 if(lastButtonOp) {
                     screenArray = [0]
                     hasEnteredAnything = true;
                     lastButtonOp = false;
                 }
-                if(!hasEnteredAComma && screenArray.length<16) {
+                //If no comma has been entered in this number yet and the digits are less then the max digits supported then proceed
+                if(!hasEnteredAComma && screenArray.length<MAX_NUMBERS) {
                     screenArray.push(".");
                     updateScreen();
                     hasEnteredAComma = true;
