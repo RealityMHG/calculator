@@ -172,7 +172,7 @@ function specialOperationHandler(op) {
     let result = getOperationResult(numbersForOp,op.textContent);
     showOperationResult(op,result);
     currentOp = "empty";
-    
+    tinyOpText.textContent = "----";
 }
 
 function getNumberOnScreen() {
